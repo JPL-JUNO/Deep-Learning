@@ -1,0 +1,12 @@
+\chapter{An Introduction to PyTorch\label{Ch01}}
+
+\section{A Fun Example}
+Efficient machine learning processes data in batches, and our model will expect a batch of data.
+
+We use PyTorch's \textsf{unsqueeze()} function to add a dimension to
+our tensor and create a batch of size 1.
+
+The use of \textsf{model.to(device)} and
+\textsf{batch.to(device)} sends our model and input data to the GPU
+if available, and executing \textsf{model(batch.to(device))} runs our
+classifier.

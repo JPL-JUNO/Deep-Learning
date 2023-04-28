@@ -1,0 +1,28 @@
+\chapter{Tensors\label{Ch02}}
+\section{Creating Tensors}
+\begin{table}
+    \centering
+    \caption{Tensor creation functions}
+    \begin{tabularx}{\textwidth}{XX}
+        \hline
+        Function                                                                                                                                 & Description                                                                                \\
+        \hline
+        \textsf{torch.tensor(data, dtype=None, device=None, requires\_grad=False, pin\_memory=False)}                                            & Creates a tensor from an existing data structure                                           \\
+        \textsf{torch.empty(*size, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}                               & Creates a tensor from uninitialized elements based on the random state of values in memory \\
+        \textsf{torch.zeros(*size, out=None, dtype=None, layout=torch.strided, evice=None, requires\_grad=False)}                                & Creates a tensor with all elements initialized  to 0.0                                     \\
+        \textsf{torch.ones(*size, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}                                & Creates a tensor with all elements initialized to 1.0                                      \\
+        \textsf{torch.arange(start=0, end, step=1, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}               & Creates a 1D tensor of values over a range with a common step value                        \\
+        \textsf{torch.linspace(start, end, steps=100, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}            & Creates a 1D tensor of linearly spaced points between the start and end                    \\
+        \textsf{torch.logspace(start, end, steps=100, base=10.0, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)} & Creates a 1D tensor of logarithmically spaced points between the start and end             \\
+        \textsf{torch.eye(n, m=None, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}                             & Creates a 2D tensor with ones on the diagonal and zeros everywhere else                    \\
+        \textsf{torch.full(size, fill\_value, out=None, dtype=None, layout=torch.strided, device=None, requires\_grad=False)}                    & Creates a tensor filled with fill\_value                                                   \\
+        \textsf{torch.load(f)}                                                                                                                   & Loads a tensor from a serialized pickle file                                               \\
+        \textsf{torch.save(f)}                                                                                                                   & Saves a tensor to a serialized pickle file                                                 \\
+        \hline
+    \end{tabularx}
+\end{table}
+
+Use \textsf{torch.arange()} when the step size is known. Use \textsf{torch.linspace()} when the number of elements is known. You can use \textsf{torch.tensor()} to create tensors from array-like structures such as lists, NumPy arrays, tuples, and
+sets. To convert existing tensors to NumPy arrays and lists,
+use the \textsf{torch.numpy()} and \textsf{torch.tolist()} functions,
+respectively.

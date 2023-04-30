@@ -26,3 +26,23 @@ Use \textsf{torch.arange()} when the step size is known. Use \textsf{torch.linsp
 sets. To convert existing tensors to NumPy arrays and lists,
 use the \textsf{torch.numpy()} and \textsf{torch.tolist()} functions,
 respectively.
+
+\subsection{Data Types}
+To reduce space complexity, you may sometimes want to
+reuse memory and overwrite tensor values using in-place
+operations. To perform in-place operations, append the
+underscore (\_) postfix to the function name. For example,
+the function \textsf{y.add\_(x)} adds x to y, but the results will be
+stored in y.
+\subsection{Creating Tensors from Random Samples}
+\href{www}{Table: Random sampling functions}
+\subsection{Creating Tensors Like Other Tensors}
+You may want to create and initialize a tensor that has
+similar properties to another tensor, including the dtype,
+device, and layout properties to facilitate calculations.
+Many of the tensor creation operations have a similarity function that allows you to easily do this. The similarity functions
+will have the postfix \textsf{\_like}. For example, \textsf{torch.empty\_like(tensor\_a)} will create an empty tensor with the dtype, device, and
+layout properties of \textsf{tensor\_a}. Some examples of similarity
+functions include \textsf{empty\_like()}, \textsf{zeros\_like()}, \textsf{ones\_like()},
+\textsf{full\_like()}, \textsf{rand\_like()}, \textsf{randn\_like()}, and \textsf{rand\_int\_like()}.
+\section{Tensor Operations}

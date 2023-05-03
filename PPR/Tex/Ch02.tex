@@ -46,3 +46,32 @@ layout properties of \textsf{tensor\_a}. Some examples of similarity
 functions include \textsf{empty\_like()}, \textsf{zeros\_like()}, \textsf{ones\_like()},
 \textsf{full\_like()}, \textsf{rand\_like()}, \textsf{randn\_like()}, and \textsf{rand\_int\_like()}.
 \section{Tensor Operations}
+\subsection{Indexing, Slicing, Combining, and Splitting Tensors}
+The following key distinctions and best practices are important to keep in mind:
+\begin{itemize}
+    \item \textsf{item()} is an important and commonly used function to return the Python number from a tensor containing a single value.
+    \item Use \textsf{view()} instead of reshape() for reshaping tensors in most cases. Using reshape() may cause the tensor to be copied, depending on its layout in memory. view() ensures that it will not be copied.
+    \item Using x.T or x.t() is a simple way to transpose 1D or 2D tensors. Use transpose() when dealing with multidimensional tensors.
+    \item The \textsf{torch.squeeze()} function is used often in deep learning to remove an unused dimension. For example, a batch of images with a single image can be reduced from 4D to 3D using squeeze().
+    \item The \textsf{torch.unsqueeze()} function is often used in deep learning to add a dimension of size 1. Since most PyTorch models expect a batch of data as an input, you could apply unsqueeze() when you only have one data sample. For example, you can pass a 3D image into torch.unsqueeze() to create a batch of one image.
+\end{itemize}
+\href{www}{Table: Indexing, slicing, combining, and splitting operations} lists some commonly used functions to manipulate
+tensor elements.
+
+\subsection{Tensor Operations for Mathematics}
+\href{wwww}{Table: Pointwise operations list some commonly used pointwise operations}
+Three different syntaxes can be used for most tensor operations. Tensors support operator overloading, so you can
+use operators directly, as in \textsf{z = x + y}. Although you can
+also use PyTorch functions such as torch.add() to do the
+same thing, this is less common. Lastly, you can perform
+in-place operations using the underscore (\_) postfix. The
+function \textsf{y.add\_(x)} achieves the same results, but they’ll
+be stored in y.
+
+Comparison functions seem pretty straightforward; however, there are a few key points to keep in mind. Common pitfalls
+include the following:
+\begin{itemize}
+    \item The torch.eq() function or == returns a tensor of the same size with a Boolean result for each element. The torch.equal() function tests if the tensors are the same size, and if all elements within the tensor are equal then it returns a single Boolean value.
+    \item The function torch.allclose() also returns a single Boolean value if all elements are close to a specified value.
+\end{itemize}
+\href{www}{Tabel: Spectral and other math operations} lists some built-in operations for spectrum analysis and other mathematical operations.

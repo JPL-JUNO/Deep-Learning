@@ -14,8 +14,14 @@
     left=2.75cm,
     right=2.75cm,
 ]{geometry}
+
+\usepackage{tcolorbox}
+\tcbuselibrary{minted, skins, breakable}
+\tcbset{breakable, colframe=orange!90!black,colback=orange!10}
+
 \usepackage{xcolor}
 \definecolor{SWJTU}{HTML}{025483}
+\newcommand{\important}[1]{\textcolor{SWJTU}{\textbf{#1}}}
 \usepackage{hyperref}
 \hypersetup{
     colorlinks=true,

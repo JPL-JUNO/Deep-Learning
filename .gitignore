@@ -2,3 +2,5 @@
 *.log
 PPR/Tex/main.synctex.gz
 *.out
+PPR/Codes/test
+PPR/Codes/train

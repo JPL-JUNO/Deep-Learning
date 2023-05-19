@@ -7,4 +7,4 @@
 
 ## Covers
 
-<a href="https://www.ituring.com.cn/book/3002"><img src="https://file.ituring.com.cn/LargeCover/2208cfcd15cc1e4ba04b" width=200px></a>
+<a href="https://www.ituring.com.cn/book/3002"><img src="https://file.ituring.com.cn/LargeCover/2208cfcd15cc1e4ba04b" width=100px></a>

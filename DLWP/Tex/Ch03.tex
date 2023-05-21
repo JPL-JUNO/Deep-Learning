@@ -1,0 +1,23 @@
+\chapter{Introduction to Keras and TensorFlow\label{Ch03}}
+
+\section{神经网络剖析}
+\figures{fig3-1}{多个层链接在一起组成了网络，将输入数据映射为预测值。然后损失函数将这些预测值与目标进行比较，得到损失值，用于衡量网络预测值与预期结果的匹配程度。优化器使用这个损失值来更新网络的权重。}
+
+\subsection{层：深度学习的基础组件}
+神经网络的基本数据结构是层。层是一个数据处理模块，将一个或多个输入张量转换为一个或多个输出张量。有些层是无状态的，但大多数的层是有状态的，即层的权重。权重是利用随机梯度下降学到的一个或多个张量，其中包含网络的知识。不同的张量格式与不同的数据处理类型需要用到不同的层。例如，简单的向量数据保存在形状为 (samples, features) 的 2D 张量中，通常用密集连接层[densely connected layer，也叫全连接层（fully connected layer）或密集层（dense layer），对应于 Keras 的 Dense 类]来处理。序列数据保存在形状为 (samples, timesteps, features) 的 3D 张量中，通常用循环层（recurrent layer，比如 Keras 的 LSTM 层）来处理。图像数据保存在 4D 张量中，通常用二维卷积层（Keras 的 Conv2D）来处理。
+
+层兼容性（layer compatibility）具体指的是每一层只接受特定形状的输入张量，并返回特定形状的输出张量。
+
+
+\section{First steps with TensorFlow}
+\subsection{Constant tensors and variables}
+A significant difference between NumPy arrays and TensorFlow tensors is that TensorFlow tensors aren't assignable: they're constant.
+
+To train a model, we'll need to update its state, which is a set of tensors. If tensors aren't assignable, how do we do it? That's where variables come in. \textsf{tf.Variable} is the class meant to manage modifiable state in TensorFlow.
+
+Similarly, assign\_add() and assign\_sub() are efficient equivalents of += and -=.
+
+\subsubsection*{THE BASE LAYER CLASS IN KERAS}
+A simple API should have a single abstraction around which everything is centered. In Keras, that's the Layer class. Everything in Keras is either a Layer or something that closely interacts with a Layer.
+
+A Layer is an object that encapsulates some state (weights) and some computation (a forward pass). The weights are typically defined in a build() (although they could also be created in the constructor, \_\_init\_\_()), and the computation is defined in the call() method.

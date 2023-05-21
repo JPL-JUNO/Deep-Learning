@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["CIFAR", "Pointwise"],
+  "cSpell.words": ["CIFAR", "crossentropy", "Pointwise", "rmsprop"],
   "[python]": {
     "editor.defaultFormatter": "ms-python.autopep8"
   },

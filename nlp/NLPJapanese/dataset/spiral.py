@@ -1,5 +1,5 @@
 """
-@Description: 提供了几个便于处理数据集的类
+@Description: 生成一些螺旋数据
 @Author(s): Stephen CUI
 @LastEditor(s): Stephen CUI
 @CreatedTime: 2023-07-24 15:18:16

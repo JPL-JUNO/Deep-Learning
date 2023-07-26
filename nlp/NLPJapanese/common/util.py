@@ -65,7 +65,7 @@ def cos_similarity(x, y, eps=1e-8):
 
 
 def most_similar(query, word_to_id: dict, id_to_word: dict,
-                 word_matrix: ndarray, top: int = 5):
+                 word_matrix: ndarray, top: int = 5) -> None:
     # 取出查询词
     if query not in word_to_id:
         print('%s is not found' % query)
@@ -82,8 +82,46 @@ def most_similar(query, word_to_id: dict, id_to_word: dict,
 
     cnt = 0
     for i in (-1 * similarity).argsort():
-        pass
-    pass
+        # 如果是查询词，相似度是 1，直接跳过
+        if id_to_word[i] == query:
+            continue
+        print('%s: %s' % (id_to_word[i], similarity[i]))
+        cnt += 1
+        if cnt >= top:
+            return
+
+
+def ppmi(C: ndarray, verbose: bool = False, eps: float = 1e-8) -> ndarray:
+    """计算正点互信息 positive pointwise mutual information
+
+    Parameters
+    ----------
+    C : ndarray
+        单词之间的共现矩阵
+    verbose : bool, optional
+        决定是否输出运行情况的标志。当处理大语料库时，设置 `verbose=True`，可以用于确认运行情况。, by default False
+    eps : float, optional
+        一个极小值，用于确保 log 中不会出现 0, by default 1e-8
+
+    Returns
+    -------
+    ndarray
+        与共现矩阵 `C` 相同大小的修正点互信息
+    """
+    M = np.zeros_like(C, dtype=np.float32)
+    N = np.sum(C)  # 语料库中单词的数量
+    S = np.sum(C, axis=0)
+    total = C.shape[0] * C.shape[1]  # 没搞错的话，C 应该是个方阵
+    cnt = 0
+    for i in range(C.shape[0]):
+        for j in range(C.shape[1]):
+            pmi = np.log2(C[i, j] * N / (S[i] * S[j]) + eps)
+            M[i, j] = max(0, pmi)
+            if verbose:
+                cnt += 1
+                if cnt % (total // 100 + 1) == 0:
+                    print('%.1f%% done' % (100 * cnt / total))
+    return M
 
 
 if __name__ == '__main__':

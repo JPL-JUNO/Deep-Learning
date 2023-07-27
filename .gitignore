@@ -6,3 +6,5 @@ PPR/Codes/test
 PPR/Codes/train
 *.pyc
 *.gz
+*.npy
+*.pkl

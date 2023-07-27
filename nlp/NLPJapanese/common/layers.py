@@ -10,20 +10,6 @@ from numpy import ndarray
 from common.functions import softmax, cross_entropy_error
 
 
-class Softmax:
-    def __init__(self):
-        self.params, self.grads = [], []
-        self.out = None
-
-    def forward(self, x: ndarray):
-        self.out = softmax(x)
-        return self.out
-
-    # TODO 方向传播待写
-    def backward(self):
-        pass
-
-
 class SoftWithLoss:
     def __init__(self):
         self.params, self.grads = [], []
@@ -123,7 +109,7 @@ class SoftmaxWithLoss:
     def __init__(self):
         self.params, self.grads = [], []
         self.y = None  # softmax 的输出
-        self.x = None  # 监督标签
+        self.t = None  # 监督标签
 
     def forward(self, x, t):
         self.t = t

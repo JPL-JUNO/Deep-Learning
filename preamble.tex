@@ -25,7 +25,10 @@
 
 \usepackage{enumitem}
 \setlist{noitemsep, topsep=3pt}
-
+\usepackage[english]{babel}
+\addto\extrasenglish{
+	\def\chapterautorefname{Chapter}
+}
 \usepackage{xcolor}
 \definecolor{SWJTU}{HTML}{025483}
 \newcommand{\important}[1]{\textcolor{SWJTU}{\textbf{#1}}}

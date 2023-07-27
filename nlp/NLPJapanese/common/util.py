@@ -108,7 +108,7 @@ def ppmi(C: ndarray, verbose: bool = False, eps: float = 1e-8) -> ndarray:
     ndarray
         与共现矩阵 `C` 相同大小的修正点互信息
     """
-    M = np.zeros_like(C, dtype=np.float32)
+    M = np.zeros_like(C, dtype=np.float64)
     N = np.sum(C)  # 语料库中单词的数量
     S = np.sum(C, axis=0)
     total = C.shape[0] * C.shape[1]  # 没搞错的话，C 应该是个方阵
@@ -124,7 +124,95 @@ def ppmi(C: ndarray, verbose: bool = False, eps: float = 1e-8) -> ndarray:
     return M
 
 
+def create_contexts_targets(corpus: list, window_size: int = 1) -> tuple[ndarray, ndarray]:
+    """实现生成上下文和目标词的函数
+
+    Parameters
+    ----------
+    corpus : list
+        语料库
+    window_size : int, optional
+        窗口大小, by default 1
+
+    Returns
+    -------
+    tuple[ndarray, ndarray]
+        上下文和目标词
+    >>> corpus = [0 1 2 3 4 1 5 6]
+    >>> create_contexts_targets(corpus, window_size=1)
+    ... (array([[0, 2],
+    ...         [1, 3],
+    ...         [2, 4],
+    ...         [3, 1],
+    ...         [4, 5],
+    ...         [1, 6]]),
+    ...  array([1, 2, 3, 4, 1, 5]))
+    """
+    target = corpus[window_size:-window_size]
+    contexts = []
+    for idx in range(window_size, len(corpus) - window_size):
+        cs = []
+        for t in range(-window_size, window_size + 1):
+            if t == 0:
+                continue
+            cs.append(corpus[idx + t])
+        contexts.append(cs)
+    return np.array(contexts), np.array(target)
+
+
+def convert_one_hot(corpus: ndarray, vocab_size: int) -> ndarray:
+    """转换为one-hot表示
+
+    Parameters
+    ----------
+    corpus : ndarray
+        单词 ID 列表，表示上下文
+    vocab_size : int
+        词汇个数
+
+    Returns
+    -------
+    ndarray
+        one-hot表示
+    >>> convert_one_hot(contexts, 7)
+    ... array([[[1, 0, 0, 0, 0, 0, 0],
+    ...         [0, 0, 1, 0, 0, 0, 0]],
+    ...
+    ...        [[0, 1, 0, 0, 0, 0, 0],
+    ...         [0, 0, 0, 1, 0, 0, 0]],
+    ...
+    ...        [[0, 0, 1, 0, 0, 0, 0],
+    ...         [0, 0, 0, 0, 1, 0, 0]],
+    ...
+    ...        [[0, 0, 0, 1, 0, 0, 0],
+    ...          [0, 1, 0, 0, 0, 0, 0]],
+    ...     
+    ...        [[0, 0, 0, 0, 1, 0, 0],
+    ...          [0, 0, 0, 0, 0, 1, 0]],
+    ...     
+    ...        [[0, 1, 0, 0, 0, 0, 0],
+    ...          [0, 0, 0, 0, 0, 0, 1]]])
+    """
+    N = corpus.shape[0]
+
+    if corpus.ndim == 1:
+        one_hot = np.zeros((N, vocab_size), dtype=np.int32)
+        for idx, word_id in enumerate(corpus):
+            one_hot[idx, word_id] = 1
+    elif corpus.ndim == 2:
+        C = corpus.shape[1]
+        one_hot = np.zeros((N, C, vocab_size), dtype=np.int32)
+        for idx_0, word_ids in enumerate(corpus):
+            for idx_1, word_id in enumerate(word_ids):
+                one_hot[idx_0, idx_1, word_id] = 1
+    return one_hot
+
+
 if __name__ == '__main__':
     text = 'You say goodbye and I say hello.'
     corpus, word_to_id, id_to_word = preprocess(text)
-    print(create_co_matrix(corpus, 7))
+    vocab_size = len(word_to_id)
+    C = create_co_matrix(corpus, vocab_size, window_size=1)
+    print(word_to_id)
+    print(C)
+    ppmi(C, verbose=True)

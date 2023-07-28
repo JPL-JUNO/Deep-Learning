@@ -1,0 +1,28 @@
+\chapter{word2vec 的高速化\label{Ch04}}
+\section{word2vec 的改进 \ding{172}}
+\subsection{Embedding 层}
+\figures{fig4-3}{one-hot 表示的上下文和 MatMul 层的权重的乘积}
+如 \autoref{fig4-3} 所示，如果语料库的词汇量有 100 万个，则单词的 one-hot 表示的维数也会是 100 万，我们需要计算这个巨大向量和权重矩阵的乘积。但是，\autoref{fig4-3} 中所做的无非是将矩阵的某个特定的行取出来。因此，直觉上将单词转化为 one-hot 向量的处理和 MatMul 层中的矩阵乘法似乎没有必要。现在，我们创建一个从权重参数中抽取“单词 ID 对应行（向量）”的层，这里我们称之为 Embedding 层。
+
+\begin{tcolorbox}
+    在 自 然 语 言 处 理 领 域，单 词 的 密 集 向 量 表 示 称 为 词 嵌 入（word embedding）或者单词的分布式表示（distributed representation）。过 去，将 基 于 计 数 的 方 法 获 得 的 单 词 向 量 称 为 distributional representation，将使用神经网络的基于推理的方法获得的单词向量称为 distributed representation。不过，中文里二者都译为“分布式表示”。
+\end{tcolorbox}
+\section{word2vec 的改进 \ding{173}}
+word2vec 的另一个瓶颈在于中间层之后的处理，即矩阵乘积和 Softmax 层的计算。本节的目标就是解决这个瓶颈。这里，我们将采用名为负采样（negative sampling）的方法作为解决方案。
+
+通过引入 Embedding 层，节省了输入层中不必要的计算。剩下的问题就是中间层之后的处理。此时，在以下两个地方需要很多计算时间：
+\begin{enumerate}
+    \item 中间层的神经元和权重矩阵（$\bm{W}_{out}$）的乘积
+    \item Softmax 层的计算
+\end{enumerate}
+\subsection{从多分类到二分类}
+下负采样这个方法的关键思想在于二分类（binary classification），更准确地说，是用二分类拟合多分类（multiclass classification），这是理解负采样的重点。
+\subsection{负采样的采样方法}
+关于这一点，基于语料库的统计数据进行采样的方法比随机抽样要好。具体来说，就是让语料库中经常出现的单词容易被抽到，让语料库中不经常出现的单词难以被抽到。
+
+word2vec 中提出的负采样 word2vec 中提出的负采样：
+\begin{equation}
+    P^{'}(w_i)=\frac{P(w_i)^{0.75}}{\sum_{j}^{n}P(w_j)^{0.75}}
+\end{equation}
+
+这样处理是防止低频单词被忽略，更准确地说通过取 0.75 次方，低频单词的概率将稍微变高。此外，0.75 这个值并没有什么理论依据，也可以设置成 0.75 以外的值。

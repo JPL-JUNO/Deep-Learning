@@ -127,3 +127,38 @@ class SoftmaxWithLoss:
         dx *= dout
         dx = dx / batch_size
         return dx
+
+
+class Embedding:
+    def __init__(self, W):
+        self.params = [W]
+        self.grads = [np.zeros_like(W)]
+        self.idx = None
+
+    def forward(self, idx):
+        # 这里突然理解稀疏矩阵如何计算的了，只需要明确哪一行取数就行
+        W, = self.params
+        self.idx = idx
+        out = W[idx]
+        return out
+
+    def backward(self, dout):
+        # 在反向传播时，从上一层（输出侧的层）传过来的梯度将原样传给下一层（输
+        # 入侧的层）。不过，从上一层传来的梯度会被应用到权重梯度 dW 的特定行（idx），
+        dW, = self.grads
+        # 我们只需要更新权重 W，所有没有必要特意创建 dW（大小和 W 相同），相反
+        # 只需要将其对应的梯度 dout 保存下来，就可以更新权重 W 的特定行，
+        # 但是为了兼容已经实现的优化器类（optimizer）
+        dW[...] = 0
+        # 这种方式不太好
+        # 因为会由多个反向传播加入一行，应该使用加入，而不是写入
+        # dW[self.idx] = dout
+        # for i, word_id in enumerate(self.idx):
+        #     dW[word_id] += dout[i]
+        # 或者这样写：
+        np.add.at(dW, self.idx, dout)
+        return None
+
+
+class SigmoidWithLoss:
+    pass

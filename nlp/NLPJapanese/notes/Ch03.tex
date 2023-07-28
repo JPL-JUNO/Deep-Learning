@@ -45,3 +45,41 @@ CBOW 模型只是学习语料库中单词的出现模式。如果语料库不一
 方案 A 和方案 B 只使用其中一个权重。而在采用方案 C 的情况下，根据如何组合这两个权重，存在多种方式，其中一个方式就是简单地将这两个权重相加。
 
 就 word2vec（特别是 skip-gram 模型）而言，最受欢迎的是方案 A。许多研究中也都仅使用输入侧的权重 $\bm{W}_{in}$ 作为最终的单词的分布式表示。遵循这一思路，我们也使用 $\bm{W}_{in}$ 作为单词的分布式表示。
+\section{word2vec 的补充说明}
+\subsection{CBOW 模型和概率}
+下面，我们用数学式来表示当给定上下文 $w_{t-1}$ 和 $w_{t+1}$ 时目标词为 $w_t$ 的概率。使用后验概率，有下式：
+\begin{equation}
+    \label{eq3-1}
+    P(w_t|w_{t-1}, w_{t+1})
+\end{equation}
+
+也就是说，CBOW 模型可以建模为 \autoref{eq3-1}。
+
+如果将其扩展到整个语料库，则损失函数可以写为：
+\begin{equation}
+    L=-\frac{1}{T}\sum_{t=1}^{T}\log P(w_t|w_{t-1}, w_{t+1})
+\end{equation}
+
+\subsection{skip-gram 模型}
+skip-gram 模型如前所述，word2vec 有两个模型：一个是我们已经讨论过的 CBOW模型；另一个是被称为 skip-gram 的模型。skip-gram 是反转了 CBOW 模型处理的上下文和目标词的模型。
+
+如 \autoref{fig3-23} 所示，CBOW 模型从上下文的多个单词预测中间的单词（目标词），而 skip-gram 模型则从中间的单词（目标词）预测周围的多个单词（上下文）。
+\figures{fig3-23}{CBOW 模型和 skip-gram 模型处理的问题}
+
+我们来考虑根据中间单词（目标词）$w_t$ 预测上下文 $w_{t-1}$ 和 $w_{t+1}$ 的情况。此时，skip-gram 可以建模为：
+\begin{equation}
+    P(w_{t-1}, w_{t+1}|w_t)
+\end{equation}
+在 skip-gram 模型中，假定上下文的单词之间没有相关性（正确地说是假定“条件独立”）
+\begin{equation}
+    P(w_{t-1}, w_{t+1}|w_t)=P(w_{t-1}|w_t)P(w_{t+1}|w_t)
+\end{equation}
+
+如果扩展到整个语料库，则skip-gram 模型的损失函数可以表示为：
+\begin{equation}
+    L=-\frac{1}{T}\sum_{t=1}^{T}\log P(w_{t-1}|w_t)+\log P(w_{t+1}|w_t)
+\end{equation}
+\subsection{基于计数与基于推理}
+首先，我们考虑需要向词汇表添加新词并更新单词的分布式表示的场景。此时，基于计数的方法需要从头开始计算。即便是想稍微修改一下单词的分布式表示，也需要重新完成生成共现矩阵、进行 SVD 等一系列操作。相反，基于推理的方法（word2vec）允许参数的增量学习。具体来说，可以将之前学习到的权重作为下一次学习的初始值，在不损失之前学习到的经验的情况下，高效地更新单词的分布式表示。在这方面，基于推理的方法（word2vec）具有优势。
+
+其次，两种方法得到的单词的分布式表示的性质和准确度有什么差异呢？就分布式表示的性质而言，基于计数的方法主要是编码单词的相似性，而 word2vec（特别是 skip-gram 模型）除了单词的相似性以外，还能理解更复杂的单词之间的模式。关于这一点，word2vec 因能解开“$king - man + woman = queen$”这样的类推问题而知名。

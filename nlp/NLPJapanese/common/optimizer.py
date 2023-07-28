@@ -38,4 +38,4 @@ class Adam:
             self.m[i] += (1 - self.beta_1) * (grads[i] - self.m[i])
             self.v[i] += (1 - self.beta_2) * (grads[i]**2 - self.v[i])
 
-            params[i] -= lr_t + self.m[i] / (np.sqrt(self.v[i]) + 1e-7)
+            params[i] -= lr_t * self.m[i] / (np.sqrt(self.v[i]) + 1e-7)

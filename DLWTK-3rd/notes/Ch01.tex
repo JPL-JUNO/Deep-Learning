@@ -1,0 +1,20 @@
+\chapter{Neural Network Foundations with TF}
+\section{Multi-layer perceptron: our first example of a network}
+\subsection{Two additional activation functions: ELU and Leaky ReLU}
+Exponential Linear Unit (ELU) is defined as
+$
+    f(a, x)=\begin{cases}
+        \alpha(e^x-1), & \text{if} \quad x \leq 0 \\
+        x,             & \text{if} \quad x > 0    \\
+    \end{cases}
+$
+for $\alpha > 0$.
+
+LeakyReLU is defined as
+$
+    f(a, x)=\begin{cases}
+        ax, & \text{if} \quad x \leq 0 \\
+        x,  & \text{if} \quad x > 0    \\
+    \end{cases}
+$
+for $\alpha > 0$.

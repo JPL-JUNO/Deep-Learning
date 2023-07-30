@@ -1,0 +1,24 @@
+\chapter{\label{Ch04}}
+\section{新闻分类：多分类问题}
+\subsection{小结}
+如果要对 $N$ 个类别的数据点进行分类，网络的最后一层应该是大小为 $N$ 的 Dense 层。
+\begin{itemize}
+    \item 对于单标签、多分类问题，网络的最后一层应该使用 softmax 激活，这样可以输出在 $N$ 个输出类别上的概率分布。
+    \item  这种问题的损失函数几乎总是应该使用分类交叉熵。它将网络输出的概率分布与目标的真实分布之间的距离最小化。
+    \item  处理多分类问题的标签有两种方法：
+          \begin{enumerate}
+              \item  通过分类编码（也叫 one-hot 编码）对标签进行编码，然后使用 \verb|categorical_crossentropy| 作为损失函数。
+              \item  将标签编码为整数，然后使用 \verb|sparse_categorical_crossentropy| 损失函数。
+          \end{enumerate}
+    \item 如果你需要将数据划分到许多类别中，应该避免使用太小的中间层，以免在网络中造成信息瓶颈。
+\end{itemize}
+
+\section{预测房价：回归问题}
+\subsection{小结}
+\begin{itemize}
+    \item 回归问题使用的损失函数与分类问题不同。回归常用的损失函数是均方误差（MSE）。
+    \item 同样，回归问题使用的评估指标也与分类问题不同。显而易见，精度的概念不适用于回归问题。常见的回归指标是平均绝对误差（MAE）。
+    \item 如果输入数据的特征具有不同的取值范围，应该先进行预处理，对每个特征单独进行缩放。
+    \item 如果可用的数据很少，使用 $K$ 折验证可以可靠地评估模型。
+    \item 如果可用的训练数据很少，最好使用隐藏层较少（通常只有一到两个）的小型网络，以避免严重的过拟合。
+\end{itemize}

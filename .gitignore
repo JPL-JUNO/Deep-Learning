@@ -8,3 +8,4 @@ PPR/Codes/train
 *.gz
 *.npy
 *.pkl
+*.toc

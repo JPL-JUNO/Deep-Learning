@@ -18,3 +18,18 @@ $
     \end{cases}
 $
 for $\alpha > 0$.
+
+\section{}
+\subsection{Further improving the simple net in TensorFlow with dropout}
+这种改进背后的想法是，随机丢失迫使网络学习有助于更好泛化的冗余模式。
+
+\subsection{Testing different optimizers in TensorFlow}
+ReLU 在 0 处不可微。然而，我们可以通过将 0 处的一阶导数定义为 0 或 1，将其扩展到整个域上的函数。
+
+ReLU 的分段导数
+$\frac{\partial y}{\partial x}=
+    \begin{cases}
+        0, x\leq 0 \\
+        1, x> 0    \\
+    \end{cases}
+$

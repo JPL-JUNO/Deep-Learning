@@ -3,3 +3,11 @@
 \subsection{}
 \subsection{深度学习的本质}
 事实证明，深度学习泛化的本质与深度学习模型本身关系不大，而与现实实际中的信息结构密切相关。
+\section{改进模型拟合}
+在开始处理一个问题是，你的初始目标是构建一个具有一定泛化能力并且能够过拟合的模型。得到这样一个模型之后，你的重点将是通过降低过拟合来提高泛化能力
+\subsection{调节关键的梯度下降参数}
+有时训练不开始，或者过早停止。损失保持不变。这个问题总是可以解决的。
+
+When this happens, it’s always a problem with the configuration of the gradient descent process: your choice of optimizer, the distribution of initial values in the weights of your model, your learning rate, or your batch size. All these parameters are interdependent, and as such it is usually sufficient to tune the learning rate and the batch size while keeping the rest of the parameters constant.
+
+

@@ -7,4 +7,4 @@ PPR/Codes/train
 *.pyc
 *.gz
 *.npy
-*.pkl
+*.toc

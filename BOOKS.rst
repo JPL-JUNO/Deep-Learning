@@ -8,8 +8,12 @@ BOOKS
     * - Title
       - Link
       - Edition
-      - 
-    * - Transformers for Natural Language Processing
-      -
-      -
-      -
+      - Language
+    * - `Link Transformers for Natural Language Processing <https://www.packtpub.com/product/transformers-for-natural-language-processing/9781800565791>`
+      - `Link T4NLP <>`
+      - 1st
+      - English
+    * - `Link Transformers for Natural Language Processing <https://www.packtpub.com/product/transformers-for-natural-language-processing/9781800565791>`
+      - `Link T4NLP <>`
+      - 1st
+      - English 

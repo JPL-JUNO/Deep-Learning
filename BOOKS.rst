@@ -6,11 +6,10 @@ BOOKS
     :header-rows: 1
 
     * - Title
-    - Link
-  - Edition
-    - 
+      - Link
+      - Edition
+      - 
     * - Transformers for Natural Language Processing
       -
       -
       -
-    *

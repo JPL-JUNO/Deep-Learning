@@ -3,10 +3,10 @@
 @Author(s): Stephen CUI
 @LastEditor(s): Stephen CUI
 @CreatedTime: 2023-08-25 22:50:00
-@Description: 
+@Description: 'Word2Vec' object has no attribute 'most_similar'似乎没有这个属性了，需要添加 wv
 """
 
-from nlpia.data.loaders import get_data
+# from nlpia.data.loaders import get_data
 # 可以用下面的命令来下载一个预训练的 Word2Vec 模型
 # word_vectors = get_data("word2vec")
 

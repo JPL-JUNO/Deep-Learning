@@ -1,3 +1,5 @@
 nltk
 torch
 gensim>=4.0.0
+transformers
+IProgress

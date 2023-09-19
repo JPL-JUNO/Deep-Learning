@@ -1,0 +1,216 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{mathptmx}
+\usepackage[left=2.45cm, right=2.45cm, top=2.77cm, bottom=2.77cm]{geometry}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\title{THUDM-chatglm-6b 部署命令}
+\author{Stephen CUI}
+\date{2023-09-12}
+\begin{document}
+\maketitle
+
+
+\section{安装 Python 与环境创建}
+这个命令可以安装 Python 其他版本，系统带有 Python3.8，可以不安装
+
+\verb|sudo apt-get install python3.10|，其中 3.10 可以换成任意其他的 Python 版本。
+% pip --version
+
+\begin{verbatim}
+    % 删除默认的软连接，因为默认 python 链接到 python2
+    sudo rm -rf /usr/bin/python3
+    % 将python 默认设置为 Python3.8，Python3.8 应该是 Ubuntu20 默认安装的版本
+    sudo ln -s /usr/bin/python3.8 /usr/bin/python
+\end{verbatim}
+
+安装 Python3 的 pip
+
+\verb|sudo apt-get install python3-pip|
+
+可以不运行，除非版本不够（升级至最新的 pip）：
+
+\verb|pip install --upgrade pip|
+
+从 Python 3.6 开始，创建虚拟环境的推荐方法是使用 venv 模块。因此我们先要安装提供 venv 模块的 python3-venv 软件包。运行命令：
+\begin{verbatim}
+    sudo apt install python3-venv
+\end{verbatim}
+
+切换项目目录。在目录中，运行
+\begin{verbatim}
+    python -m venv llm
+\end{verbatim}
+命令来创建新的虚拟环境，llm 可以更改为任意环境名。
+
+要开始使用此虚拟环境，您需要通过运行 activate 脚本将其激活。source 命令将会加载 python 的虚拟环境
+\begin{verbatim}
+    source llm/bin/activate
+    % conda activate llm
+\end{verbatim}
+
+一旦激活，虚拟环境的 bin 目录将添加到 PATH 变量的开头。 此外，您的 Shell 提示符也会更改，并且会显示您当前正在使用的虚拟环境的名称。
+
+使用 Python 包管理器 pip 安装 python 包，在虚拟环境中，可以使用命令 pip 代替 pip3，并使用 python 代替 python3
+\begin{verbatim}
+    %  测试 numpy 的安装
+    pip install numpy  
+\end{verbatim}
+
+完成工作后停用虚拟环境，只需键入 deactivate，您将返回到常规 shell。
+\begin{verbatim}
+    deactivate
+\end{verbatim}
+
+
+\section{下载模型与代码}
+\subsection{下载权重}
+\subsubsection{方式一}
+直接从 \href{https://huggingface.co/}{Hugging Face} 的网站上下载，地址为：\href{https://huggingface.co/THUDM/chatglm2-6b/tree/main}{THUDM/chatglm2-6b}
+
+
+\subsubsection{手动下载权重的话不需要运行以下步骤}
+\begin{verbatim}
+    sudo apt-get update
+\end{verbatim}
+
+安装 git-lfs 因为较大文件 git 不管理，需要使用 git-lfs 下载，但是下载较慢，建议在\href{https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/}{清华云盘}中下载。
+
+\begin{verbatim}
+    sudo apt-get install git-lfs
+\end{verbatim}
+
+\subsubsection{方式二(推荐)}
+从清华云盘中下载模型权重：地址为：\href{https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/}{chatglm-6b}
+
+\subsection{下载运行代码\label{download}}
+注意：\textbf{必须在 Git Bash 中运行}
+
+需要安装 git，下载地址为：\href{https://git-scm.com/}{git}
+
+如果需要，可以设置用户名和邮箱：
+\begin{verbatim}
+    git config --global user.name "FIRST_NAME LAST_NAME"
+    git config --global user.email "MY_NAME@example.com"
+\end{verbatim}
+
+如果有代理的话，设置代理的端口（否则连接错误）
+\begin{verbatim}
+    git config --global http.proxy http://127.0.0.1:port
+\end{verbatim}
+port 设置为机子的端口。
+
+执行如下命令可以下载代码，代码会保存在当前目录下的 chatglm-6b 文件夹中，可以移动到权重相同文件夹下：
+
+\verb|GIT_LFS_SKIP_SMUDGE=1 git clone https://huggingface.co/THUDM/chatglm-6b|
+
+\section{本地文件上传至服务器}
+\subsection{基于 vscode 的拓展 SFTP}
+安装完 SFTP 后键盘按 \verb|ctrl+shift+p| 输入 \verb|> SFTP: config| 回车进入 sftp.json 文件。
+
+使用 SFTP 传输本地文件的配置：remotePath，host，password，name 按实际修改，ignore为不传输文件类型或文件
+\begin{verbatim}
+{
+    "name": "ECS-aeqk",
+    "host": "IP地址",
+    "protocol": "sftp",
+    "port": 22,
+    "username": "用户名",
+    "password": "你的密码",
+    "remotePath": "llm/glm",
+    "uploadOnSave": true,
+    "useTempFile": false,
+    "openSsh": false,
+    "ignore": [
+        "**/.vscode/**",
+        "**/.git/**",
+        "**/.DS_Store/**",
+        "**/__pycache__/**"
+    ]
+}
+\end{verbatim}
+
+\section{安装运行依赖的包}
+运行如下代码：
+\begin{verbatim}
+    pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+\end{verbatim}
+
+点击获取 \href{https://github.com/THUDM/ChatGLM2-6B/blob/main/requirements.txt}{requirements.txt} 地址
+
+\subsection{运行测试代码}
+
+可以在 Python 交互式界面中运行以下命令（逐行）（进行交互式页面 python -i）
+\begin{verbatim}
+from transformers import AutoTokenizer, AutoModel
+tokenizer = AutoTokenizer.from_pretrained("./", trust_remote_code=True, revision='v1.1.0')
+model = AutoModel.from_pretrained("./", trust_remote_code=True, revision='v1.1.0').half().cuda()
+model = model.eval()
+response, history = model.chat(tokenizer, "你好", history=[])
+print(response)
+response, history = model.chat(tokenizer, "如何学习语言大模型", history=history)
+print(response)
+\end{verbatim}
+
+也可以直接写入文件，比如 \verb|running_test.py|，然后运行
+\begin{verbatim}
+    python running_test.py
+\end{verbatim}
+
+\section{网页版}
+\subsection{基于 \href{https://streamlit.io/}{streamlit} 推荐}
+安装网页版本所需的包
+\begin{verbatim}
+    pip install streamlit -i https://pypi.tuna.tsinghua.edu.cn/simple
+    pip install streamlit-chat -i https://pypi.tuna.tsinghua.edu.cn/simple
+\end{verbatim}
+
+安装完成，直接运行下面命令就可以网页版：
+
+\verb|streamlit run web_demo2.py|
+
+\subsection{基于 \href{https://www.gradio.app/}{gradio} 国内不推荐}
+Gradio 是通过友好的 Web 界面演示机器学习模型的最快方式，以便任何人都可以在任何地方使用它！
+
+\verb|pip install gradio mdtex2html|
+
+Gradio 直接使用 Python 运行，国内访问速度慢。
+\begin{verbatim}
+    python web_deom.py
+\end{verbatim}
+
+\section{微调模型}
+\subsection{微调所需依赖包}
+\verb|pip install rouge_chinese nltk jieba datasets -i https://pypi.tuna.tsinghua.edu.cn/simple|
+\subsection{软件依赖}
+\href{https://developer.nvidia.com/cuda-toolkit-archive}{cuda 更多版本}
+
+更新 cuda 使用以下命令
+
+\verb|wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run|
+
+\verb|sudo sh cuda_11.7.0_515.43.04_linux.run|
+
+如果你安装了驱动，在安装的时候需要取消驱动的勾选：
+
+\verb|apt install ubuntu-drivers-common|
+
+\verb|ubuntu-drivers devices|
+
+执行微调的文件，用以下命令：
+
+\verb|bash train.sh|
+
+\section{其他}
+\subsection{遇到问题}
+\begin{itemize}
+    \item \href{https://github.com/THUDM/ChatGLM2-6B/issues/21}{RuntimeError: Internal: src/sentencepiece\_processor.cc(1101) [model\_proto-$>$ParseFromArray(serialized.data(), serialized.size())]} 可以重新在 Hugging Face 上下载文件 \nameref{download}。
+\end{itemize}
+\subsection{参考链接}
+\href{https://www.myfreax.com/how-to-create-python-virtual-environments-on-ubuntu-18-04/}{如何在 Ubuntu 18.04 创建 Python 虚拟环境}
+
+\href{https://github.com/yizhongw/self-instruct/blob/main/human_eval/README.md}{yizhongw/self-instruct}
+
+\href{https://github.com/THUDM/ChatGLM-6B}{清华大学GLM-6B}
+
+\href{https://cloud.tsinghua.edu.cn/d/fb9f16d6dc8f482596c2/}{模型权重所在云盘位置}
+\end{document}

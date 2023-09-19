@@ -10,3 +10,4 @@ PPR/Codes/train
 *.toc
 nlp/NLPIA/code/ch06/my_domain_specific_word2vec_model
 nlp/NLPIA/data/aclImdb
+sftp.json

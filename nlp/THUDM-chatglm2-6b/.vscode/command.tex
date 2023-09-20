@@ -1,14 +1,17 @@
 \documentclass{article}
 \usepackage{ctex}
 \usepackage{mathptmx}
+\usepackage{xcolor}
+\definecolor{Claret}{HTML}{990000}
 \usepackage[left=2.45cm, right=2.45cm, top=2.77cm, bottom=2.77cm]{geometry}
-\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage[colorlinks, urlcolor=Claret, linkcolor=orange, linktocpage]{hyperref}
 \title{THUDM-chatglm-6b 部署命令}
 \author{Stephen CUI}
 \date{2023-09-12}
 \begin{document}
 \maketitle
 
+\tableofcontents
 
 \section{安装 Python 与环境创建}
 这个命令可以安装 Python 其他版本，系统带有 Python3.8，可以不安装
@@ -185,8 +188,9 @@ Gradio 直接使用 Python 运行，国内访问速度慢。
 \href{https://developer.nvidia.com/cuda-toolkit-archive}{cuda 更多版本}
 
 更新 cuda 使用以下命令
-
-\verb|wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run|
+\begin{verbatim}
+wget https://developer.download.nvidia.com/compute/cuda/11.7.1/local_installers/cuda_11.7.1_515.65.01_linux.run|
+\end{verbatim}
 
 \verb|sudo sh cuda_11.7.0_515.43.04_linux.run|
 
@@ -200,11 +204,28 @@ Gradio 直接使用 Python 运行，国内访问速度慢。
 
 \verb|bash train.sh|
 
+\subsection{微调后的 API}
+使用微调后的权重，已经有写好的文件可以运行（\href{https://github.com/THUDM/ChatGLM2-6B/blob/main/ptuning/web_demo.py}{web\_demo.py}），只需要将 \href{https://github.com/THUDM/ChatGLM2-6B/blob/main/ptuning/web_demo.sh}{web\_demo.sh} 文件的参数 \verb|--model_name_or_path| 改成我们本地对应的文件夹或者路径即可。
+
+如果需要打开公网接口，需要将 \verb|demo.queue().launch(share=False, inbrowser=True)| 中的 \verb|share| 参数设置为 \verb|True|，该行位置在 \href{https://github.com/THUDM/ChatGLM2-6B/blob/3d0225f969d56c058f052f6800a21630d14a1184/ptuning/web_demo.py#L162}{web\_demo.py Line 162}.
+
+打开公网接口，会出现一些问题，解决见 \nameref{question}。
 \section{其他}
-\subsection{遇到问题}
+\subsection{常见问题\label{question}}
 \begin{itemize}
     \item \href{https://github.com/THUDM/ChatGLM2-6B/issues/21}{RuntimeError: Internal: src/sentencepiece\_processor.cc(1101) [model\_proto-$>$ParseFromArray(serialized.data(), serialized.size())]} 可以重新在 Hugging Face 上下载文件 \nameref{download}。
     \item \href{https://github.com/THUDM/ChatGLM2-6B/issues/208}{RuntimeError: Default process group has not been initialized, please make sure to call init\_process\_group.} 将 transformers 降级至 4.27.1，使用 \verb|pip install transformers==4.27.1|
+    \item Could not create share link. Missing file: /xxxx/frpc\_linux\_amd64\_v0.2. 解决步骤如下
+          \begin{enumerate}
+              \item 下载必要的文件 \href{https://cdn-media.huggingface.co/frpc-gradio-0.2/frpc_linux_amd64}{frpc\_linux\_amd64}，会被识别为病毒，需要在防火墙开启权限并执行
+              \item 将下载的文件名修改为 frpc\_linux\_amd64\_w0.2
+              \item 将文件移动到 此路径 /root/username/lib/pthon3.8/site-packages/gradio 下，username 是你自己的用户，移动命令为
+
+                    \verb|mv frpc_linux_amd64_w0.2 /root/username/lib/pthon3.8/site-packages/gradio|
+              \item 给 frpc\_linux\_amd64\_w0.2 添加一个可执行权限
+
+                    \verb|chmod +x /root/username/lib/pthon3.8/site-packages/gradio/frpc_linux_amd64_w0.2|
+          \end{enumerate}
 \end{itemize}
 \subsection{参考链接}
 \href{https://www.myfreax.com/how-to-create-python-virtual-environments-on-ubuntu-18-04/}{如何在 Ubuntu 18.04 创建 Python 虚拟环境}

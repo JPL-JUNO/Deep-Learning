@@ -204,6 +204,7 @@ Gradio 直接使用 Python 运行，国内访问速度慢。
 \subsection{遇到问题}
 \begin{itemize}
     \item \href{https://github.com/THUDM/ChatGLM2-6B/issues/21}{RuntimeError: Internal: src/sentencepiece\_processor.cc(1101) [model\_proto-$>$ParseFromArray(serialized.data(), serialized.size())]} 可以重新在 Hugging Face 上下载文件 \nameref{download}。
+    \item \href{https://github.com/THUDM/ChatGLM2-6B/issues/208}{RuntimeError: Default process group has not been initialized, please make sure to call init\_process\_group.} 将 transformers 降级至 4.27.1，使用 \verb|pip install transformers==4.27.1|
 \end{itemize}
 \subsection{参考链接}
 \href{https://www.myfreax.com/how-to-create-python-virtual-environments-on-ubuntu-18-04/}{如何在 Ubuntu 18.04 创建 Python 虚拟环境}
